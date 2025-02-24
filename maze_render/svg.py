@@ -18,13 +18,13 @@ def background(background_color):
     print(f'<rect width="100%" height="100%" fill="{background_color}" />')
 
 
-def line(maze, stroke, stroke_width, x1, y1, x2, y2):
+def line(stroke, stroke_width, x1, y1, x2, y2):
     print(f'<line stroke="{stroke}" stroke_width="{stroke_width}" ', end='')
     print(f'x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" ', end='')
     print('/>')
 
 
-def fill_rectangle(maze, fill_color, x, y, width, height):
+def fill_rectangle(fill_color, x, y, width, height):
     print(f'<rect fill="{fill_color}" ', end='')
     print(f'x="{x}" y="{y}" width="{width}" height="{height}" ', end='')
     print('/>')
@@ -33,14 +33,12 @@ def fill_rectangle(maze, fill_color, x, y, width, height):
 def render_cell(maze, cell_width, cell_height, stroke, stroke_width,
                 coordinate):
     if 'east' not in maze.links[maze.linearize(coordinate)]:
-        line(maze, stroke, stroke_width,
-             (coordinate[0] * cell_width) + cell_width,
+        line(stroke, stroke_width, (coordinate[0] * cell_width) + cell_width,
              (coordinate[1] * cell_height) + cell_height,
              (coordinate[0] * cell_width) + cell_width,
              coordinate[1] * cell_height)
     if 'north' not in maze.links[maze.linearize(coordinate)]:
         line(
-            maze,
             stroke,
             stroke_width,
             coordinate[0] * cell_width,
@@ -49,12 +47,12 @@ def render_cell(maze, cell_width, cell_height, stroke, stroke_width,
             (coordinate[1] * cell_height) + cell_height,
         )
     if 'south' not in maze.links[maze.linearize(coordinate)]:
-        line(maze, stroke, stroke_width, coordinate[0] * cell_width,
+        line(stroke, stroke_width, coordinate[0] * cell_width,
              coordinate[1] * cell_height,
              (coordinate[0] * cell_width) + cell_width,
              coordinate[1] * cell_height)
     if 'west' not in maze.links[maze.linearize(coordinate)]:
-        line(maze, stroke, stroke_width, coordinate[0] * cell_width,
+        line(stroke, stroke_width, coordinate[0] * cell_width,
              (coordinate[1] * cell_height) + cell_height,
              coordinate[0] * cell_width, coordinate[1] * cell_height)
 
@@ -87,6 +85,20 @@ def svg_distance(maze, cell_width, cell_height):
         fill_color = distance_color(distance, maximum_distance)
         x = coordinate[0] * cell_width
         y = coordinate[1] * cell_height
-        fill_rectangle(maze, fill_color, x, y, cell_width, cell_height)
+        fill_rectangle(fill_color, x, y, cell_width, cell_height)
         render_cell(maze, cell_width, cell_height, "black", "1", coordinate)
+
+    longest_path = maze.longest_path()
+    current_coordinate = longest_path.pop()
+    half_cell_width = math.floor(cell_width / 2)
+    half_cell_height = math.floor(cell_height / 2)
+    while len(longest_path) > 0:
+        next_coordinate = longest_path.pop()
+        line("red", "3",
+             (current_coordinate[0] * cell_width) + half_cell_width,
+             (current_coordinate[1] * cell_height) + half_cell_height,
+             (next_coordinate[0] * cell_width) + half_cell_width,
+             (next_coordinate[1] * cell_height) + half_cell_height)
+        current_coordinate = next_coordinate
+
     svg_close()
