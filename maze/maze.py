@@ -1,4 +1,5 @@
 from collections import deque
+import math
 
 
 class Maze:
@@ -29,6 +30,9 @@ class Maze:
 
     def linearize(self, coordinate):
         return (coordinate[1] * self.width) + coordinate[0]
+
+    def delinearize(self, index):
+        return ((index % self.width), math.floor(index / self.width))
 
     def link(self, coordinate1, coordinate2):
         index1 = self.linearize(coordinate1)
@@ -84,3 +88,16 @@ class Maze:
             current_coordinate = next_coordinate
 
         return path
+
+    def longest_path(self):
+        self.calculate_distances((0, 0))
+        distances = self.distances[self.linearize((0, 0))]
+        maximum_distance = max(distances)
+        farthest_coordinate1 = self.delinearize(
+            distances.index(maximum_distance))
+        self.calculate_distances(farthest_coordinate1)
+        distances = self.distances[self.linearize(farthest_coordinate1)]
+        maximum_distance = max(distances)
+        farthest_coordinate2 = self.delinearize(distances.index(maximum_distance))
+        return self.shortest_path(farthest_coordinate1, farthest_coordinate2)
+

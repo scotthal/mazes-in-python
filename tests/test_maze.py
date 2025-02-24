@@ -146,6 +146,18 @@ class TestMaze(unittest.TestCase):
         self.assertEqual(path[2], (1, 0))
         self.assertEqual(path[3], (0, 0))
 
+    def test_longest_path(self):
+        maze = Maze(2, 2)
+        maze.link((0, 0), (1, 0))
+        maze.link((1, 0), (1, 1))
+        maze.link((1, 1), (0, 1))
+
+        path = maze.longest_path()
+        self.assertEqual(len(path), 4)
+        self.assertEqual(path[0], (0, 0))
+        self.assertEqual(path[1], (1, 0))
+        self.assertEqual(path[2], (1, 1))
+        self.assertEqual(path[3], (0, 1))
 
 if __name__ == "__main__":
     unittest.main()
