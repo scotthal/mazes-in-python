@@ -23,19 +23,14 @@ def line(maze, cell_width, cell_height, stroke, stroke_width, x1, y1, x2, y2):
     print('/>')
 
 
-def render_cell(maze, cell_width, cell_height, stroke, stroke_width, coordinate):
+def render_cell(maze, cell_width, cell_height, stroke, stroke_width,
+                coordinate):
     if 'east' not in maze.links[maze.linearize(coordinate)]:
-        line(
-            maze,
-            cell_width,
-            cell_height,
-            stroke,
-            stroke_width,
-            (coordinate[0] * cell_width) + cell_width,
-            (coordinate[1] * cell_height) + cell_height,
-            (coordinate[0] * cell_width) + cell_width,
-            coordinate[1] * cell_height
-        )
+        line(maze, cell_width, cell_height, stroke, stroke_width,
+             (coordinate[0] * cell_width) + cell_width,
+             (coordinate[1] * cell_height) + cell_height,
+             (coordinate[0] * cell_width) + cell_width,
+             coordinate[1] * cell_height)
     if 'north' not in maze.links[maze.linearize(coordinate)]:
         line(
             maze,
@@ -49,34 +44,21 @@ def render_cell(maze, cell_width, cell_height, stroke, stroke_width, coordinate)
             (coordinate[1] * cell_height) + cell_height,
         )
     if 'south' not in maze.links[maze.linearize(coordinate)]:
-        line(
-            maze,
-            cell_width,
-            cell_height,
-            stroke,
-            stroke_width,
-            coordinate[0] * cell_width,
-            coordinate[1] * cell_height,
-            (coordinate[0] * cell_width) + cell_width,
-            coordinate[1] * cell_height
-        )
+        line(maze, cell_width, cell_height, stroke, stroke_width,
+             coordinate[0] * cell_width, coordinate[1] * cell_height,
+             (coordinate[0] * cell_width) + cell_width,
+             coordinate[1] * cell_height)
     if 'west' not in maze.links[maze.linearize(coordinate)]:
-        line(
-            maze,
-            cell_width,
-            cell_height,
-            stroke,
-            stroke_width,
-            coordinate[0] * cell_width,
-            (coordinate[1] * cell_height) + cell_height,
-            coordinate[0] * cell_width,
-            coordinate[1] * cell_height
-        )
+        line(maze, cell_width, cell_height, stroke, stroke_width,
+             coordinate[0] * cell_width,
+             (coordinate[1] * cell_height) + cell_height,
+             coordinate[0] * cell_width, coordinate[1] * cell_height)
 
 
 def svg(maze, cell_width, cell_height):
     svg_open(maze, cell_width, cell_height)
     background('white')
-    for coordinate in [(x, y) for y in range(maze.height) for x in range(maze.width)]:
+    for coordinate in [(x, y) for y in range(maze.height)
+                       for x in range(maze.width)]:
         render_cell(maze, cell_width, cell_height, "black", "1", coordinate)
     svg_close()
