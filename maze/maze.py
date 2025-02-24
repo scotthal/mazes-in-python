@@ -66,3 +66,21 @@ class Maze:
             frontier.popleft()
 
         self.distances[self.linearize(coordinate)] = distances
+
+    def shortest_path(self, from_coordinate, to_coordinate):
+        self.calculate_distances(from_coordinate)
+        distances = self.distances[self.linearize(from_coordinate)]
+        path = []
+        path.append(to_coordinate)
+        current_coordinate = to_coordinate
+        while current_coordinate != from_coordinate:
+            current_distance = distances[self.linearize(current_coordinate)]
+            for link in self.links[self.linearize(
+                    current_coordinate)].values():
+                if distances[self.linearize(link)] == current_distance - 1:
+                    next_coordinate = link
+                    break
+            path.append(next_coordinate)
+            current_coordinate = next_coordinate
+
+        return path
