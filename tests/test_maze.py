@@ -90,6 +90,19 @@ class TestMaze(unittest.TestCase):
         self.assertEqual(maze.links[maze.linearize(coordinate)]['west'], (0, 1))
         self.assertEqual(maze.links[maze.linearize(coordinate)]['south'], (1, 0))
 
+    def test_calculate_distances(self):
+        maze = Maze(2, 2)
+        maze.link((0, 0), (1, 0))
+        maze.link((1, 0), (1, 1))
+        maze.link((1, 1), (0, 1))
+
+        maze.calculate_distances((0, 0))
+        distances = maze.distances[maze.linearize((0, 0))]
+        self.assertEqual(distances[maze.linearize((0, 0))], 0)
+        self.assertEqual(distances[maze.linearize((1, 0))], 1)
+        self.assertEqual(distances[maze.linearize((1, 1))], 2)
+        self.assertEqual(distances[maze.linearize((0, 1))], 3)
+
 if __name__ == "__main__":
     unittest.main()
 
